@@ -1,4 +1,4 @@
-package io.zsoftconsulting.moviecatalogservice.model;
+package io.zsoftconsulting.moviecatalogservice.models;
 
 public class CatalogItem {
 

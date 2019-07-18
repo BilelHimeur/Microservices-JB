@@ -1,6 +1,6 @@
 package io.zsoftconsulting.moviecatalogservice.resources;
 
-import io.zsoftconsulting.moviecatalogservice.model.CatalogItem;
+import io.zsoftconsulting.moviecatalogservice.models.CatalogItem;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
