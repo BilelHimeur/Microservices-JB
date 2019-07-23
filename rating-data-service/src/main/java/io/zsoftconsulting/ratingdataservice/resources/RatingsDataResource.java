@@ -1,6 +1,7 @@
 package io.zsoftconsulting.ratingdataservice.resources;
 
 import io.zsoftconsulting.ratingdataservice.models.Rating;
+import io.zsoftconsulting.ratingdataservice.models.UserRating;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +18,13 @@ public class RatingsDataResource {
     }
 
     @RequestMapping("/users/{userId}")
-    public List<Rating> getRatings(@PathVariable("userId") String userId) {
+    public UserRating getRatings(@PathVariable("userId") String userId) {
         List<Rating> ratings = Arrays.asList(
                 new Rating("1234", 4),
                 new Rating("5678", 3)
         );
-        return ratings;
+        UserRating userRating = new UserRating();
+        userRating.setUserRatings(ratings);
+        return userRating;
     }
 }

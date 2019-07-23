@@ -3,6 +3,7 @@ package io.zsoftconsulting.moviecatalogservice.resources;
 import io.zsoftconsulting.moviecatalogservice.models.CatalogItem;
 import io.zsoftconsulting.moviecatalogservice.models.Movie;
 import io.zsoftconsulting.moviecatalogservice.models.Rating;
+import io.zsoftconsulting.moviecatalogservice.models.UserRating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,21 +28,12 @@ public class MovieCatalogResource {
 
     @RequestMapping("{userId}")
     public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
-        List<Rating> ratings = Arrays.asList(
-                new Rating("1234", 4),
-                new Rating("5678", 3)
-        );
-        return ratings.stream()
+        // First API call to get all ratings movies for a user
+        UserRating ratings = restTemplate.getForObject("http://localhost:8083/ratingsData/users/" + userId, UserRating.class);
+        return ratings.getUserRatings().stream()
                 .map(rating -> {
+                    // Second API call to get movie info for each movie ID
                     Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
-
-                    /*Movie movie = webClientBuilder.build()
-                            .get()
-                            .uri("http://localhost:8082/movies/" + rating.getMovieId())
-                            .retrieve()
-                            .bodyToMono(Movie.class) // mono tells the program that you will get movie object in the future and not necessary right now (asynchronous)
-                            .block();*/
-
                     return new CatalogItem(movie.getName(), "des", rating.getRating());
                 }).collect(Collectors.toList());
     }
