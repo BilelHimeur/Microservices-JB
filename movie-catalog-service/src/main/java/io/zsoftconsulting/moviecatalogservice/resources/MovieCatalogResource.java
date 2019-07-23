@@ -33,14 +33,14 @@ public class MovieCatalogResource {
         );
         return ratings.stream()
                 .map(rating -> {
-                    //Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
+                    Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" + rating.getMovieId(), Movie.class);
 
-                    Movie movie = webClientBuilder.build()
+                    /*Movie movie = webClientBuilder.build()
                             .get()
                             .uri("http://localhost:8082/movies/" + rating.getMovieId())
                             .retrieve()
                             .bodyToMono(Movie.class) // mono tells the program that you will get movie object in the future and not necessary right now (asynchronous)
-                            .block();
+                            .block();*/
 
                     return new CatalogItem(movie.getName(), "des", rating.getRating());
                 }).collect(Collectors.toList());
