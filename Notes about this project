@@ -1,0 +1,54 @@
+Un gros bloque de code sera découpé en plusieurs microservcies => cela résoud des problèmes d'évolutivité, modularité de déploiemen...
+Les microservcies découpe une application monolitique à une application microservcies
+Chaque microservice est un Spring boot project
+	Pour créer une application spring boot, il y a plusieurs méthodes : A utilisation de Maven avec les dependences requises
+																		B utilisation de spring CLI
+																		C utilisation de start.spring.io
+	Il faut rajouter la dépendence Web api (la dépendece qui facilite les web api dans spring c'est Spring MVC)
+	
+Tant que les services communiquent entre eux en REST chaque microservcie peut être développé par des technologies différentes de celles des autres microservcies
+Spring Boot a une librairie client dans la classpath (ResteTemplate) qui permet d'appller programatiquement un microservcie externe sur une URL
+RestTemplate : prend deux paramètres (1 : l'url à appeller, 2 : l'objet dans lequel je veux unmarchal mon json reçu)
+
+Reactive programing : programmation asynchrone (librairie Reactive web => dependence webflux de spring)
+
+On doit toujours éviter de écrire des API qui retournent une list, la meilleure façon c'est de retourner un objet qui contient la list. une des raison c'est 
+que si demain je veux rajouter un champs global avec la list je devrai changer tout un tas de chose, alors que si j'utilise un objet il n'y pas mal si je rajoute 
+un champs qui sera utilisé par celui qui en a besoin. une autre raison quand je récupère le résultat de mon API depuis l'url en utilisant le RestTemplate 
+je dois passer un object pour le casting du résultat alors qui si je m'attends à une liste je dois passer un ParameterizedTypeReference et ...
+
+Vue que le WebClient peut faire des appels à des API de manière synchrone ou asynchrone => il va remplacer le RestTemplate (ce dernier sera deprecated)
+
+Service Discovery : (annuaire) : 
+	- Il y a le Client side discovery => le client contacte l'annuaire on lui disant je veux contacter le microservcie 2, l'annuaire répond avec l'URL du microservcie 2 
+et puis le client contacte directement le microservcie 2
+	- Il y a aussi le Server side discovery => le client contacte seulement l'annuaire on lui disant je veux consomer quelque chose de la part du microservice 2, 
+	c'est le DISCOVERY SERVER qui achemine l'appel au bon microservices.
+	- Spring Cloud utilise le Client side discovery.
+
+- * Netflix OSS (open source softwer) est l'un des leader de création de librairies de microservcies open source
+- * Eureka : la technologie que Spring Cloud utilise pour le Service Discovery est Eureka (développée par Netflix OSS)
+- * Netflix ont créé plusieurs librairie de microservices telles que : Eurika, Ribbon, Hysterix, Zuul
+
+
+eureka.client.register-with-eureka=false
+											                    => Puisque dans un projet on peut avoir plusieurs Eureka Server, chaque serveur pourrait être client pour les autres serveurs,
+											                    pour êmpecher ça on met ces deux annotations dans le fichier properties du projet.
+eureka.client.fetch-registry=false
+
+
+Une applications cliente microservcie doit juste ajouter dans son pom la dépendance Eureka Client pour publier ces services auprès du serveur (sans oublier de mettre la 
+version du spring cloud utilisée dans la partie properties).
+*Spring cloud est la technologie qui permets de construire des microservcies
+Un microservcie client Eureka cherche par défaut le serveur Eureka sur le port 8761 (port par défaut du serveur Eureka), sinon on doit spécifier dans le fichier properties 
+où il se trouve le serveur
+
+la commande : java -Dserver.port=8206 -jar movie-info-service-0.0.1-SNAPSHOT.jar => exécute le serveur movie-info-service sur le port 8206 (le port par défaut dans le fichier
+ properties sera redéfini).
+ 
+Eureka nous garantie :
+Load balancing.
+Fault tolerance => - Si service_client_1 tombe down, Eureka server donne l'adresse du load balanced service_client_1.
+				   - Si EUREKA SERVER tombe down, les Eureka clients ont un cache dans lequel ils cherchent les adresses des autres services si le Eureka server est down
+ 
+	
