@@ -32,8 +32,8 @@ et puis le client contacte directement le microservcie 2
 
 
 eureka.client.register-with-eureka=false
-											                    => Puisque dans un projet on peut avoir plusieurs Eureka Server, chaque serveur pourrait être client pour les autres serveurs,
-											                    pour êmpecher ça on met ces deux annotations dans le fichier properties du projet.
+						=> Puisque dans un projet on peut avoir plusieurs Eureka Server, chaque serveur pourrait être client pour les autres serveurs,
+						pour êmpecher ça on met ces deux annotations dans le fichier properties du projet.
 eureka.client.fetch-registry=false
 
 
